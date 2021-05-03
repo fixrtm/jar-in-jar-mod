@@ -28,6 +28,7 @@ dependencies {
     compileOnly("lzma:lzma:0.0.1")
     compileOnly(files(rootProject.tasks.createCompileTimeConstant.get().output)
         .builtBy(rootProject.tasks.createCompileTimeConstant))
+    compileOnly(project(":runtime-common"))
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.6.0")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")

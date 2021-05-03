@@ -1,12 +1,7 @@
 package com.anatawa12.jarInJar;
 
 import LZMA.LzmaInputStream;
-import cpw.mods.fml.common.ObfuscationReflectionHelper;
-import cpw.mods.fml.common.discovery.ContainerType;
-import cpw.mods.fml.common.discovery.ModCandidate;
-import cpw.mods.fml.common.discovery.ModDiscoverer;
-import cpw.mods.fml.relauncher.CoreModManager;
-import cpw.mods.fml.relauncher.FMLInjectionData;
+import com.anatawa12.jarInJar.VersionedPart.ModCandidate;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraft.launchwrapper.LaunchClassLoader;
 import org.apache.logging.log4j.LogManager;
@@ -16,6 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
@@ -43,6 +39,10 @@ import static com.anatawa12.jarInJar.CompileConstants.major;
 import static com.anatawa12.jarInJar.CompileConstants.minor;
 import static com.anatawa12.jarInJar.CompileConstants.minute;
 import static com.anatawa12.jarInJar.CompileConstants.patch;
+import static com.anatawa12.jarInJar.VersionedPart.CoreModManagerClass;
+import static com.anatawa12.jarInJar.VersionedPart.ModCandidateClass;
+import static com.anatawa12.jarInJar.VersionedPart.ModDiscovererClass;
+import static com.anatawa12.jarInJar.VersionedPart.getFMLInjectionData;
 
 public class JarInJarModLoader {
     @SuppressWarnings({"PointlessArithmeticExpression"})
@@ -131,7 +131,7 @@ public class JarInJarModLoader {
                     jarName);
         }
         try {
-            Method loadCoreMod = CoreModManager.class.getDeclaredMethod("loadCoreMod",
+            Method loadCoreMod = CoreModManagerClass.getDeclaredMethod("loadCoreMod",
                     LaunchClassLoader.class, String.class, File.class);
             loadCoreMod.setAccessible(true);
             for (String className : fmlCorePlugin.split(";")) {
@@ -168,7 +168,7 @@ public class JarInJarModLoader {
 
     // will be called by transformed class
     @SuppressWarnings("unused")
-    public static void identifyMods(ModDiscoverer discoverer) {
+    public static void identifyMods(Object discoverer) {
         LOGGER.info("identifyMods JarInJar by " + JarInJarModLoader.class.getName());
         Set<Path> filesInDir;
         try {
@@ -193,13 +193,13 @@ public class JarInJarModLoader {
             cacheDir.resolve(path).toFile().delete();
 
         try {
-            Method addCandidate = ModDiscoverer.class.getDeclaredMethod("addCandidate", ModCandidate.class);
+            Method addCandidate = ModDiscovererClass.getDeclaredMethod("addCandidate", ModCandidateClass);
             addCandidate.setAccessible(true);
             MessageDigest sha256Digest = getSha256Digest();
             for (String aModInfo : modsMap) {
                 File jarFileFile = cacheDir.resolve(aModInfo).toFile();
 
-                addCandidate.invoke(discoverer, new ModCandidate(jarFileFile, jarFileFile, ContainerType.JAR));
+                addCandidate.invoke(discoverer, new ModCandidate(jarFileFile, jarFileFile, "JAR"));
             }
         } catch (NoSuchMethodException|IllegalAccessException e) {
             throw new RuntimeException(e);
@@ -208,7 +208,7 @@ public class JarInJarModLoader {
         }
     }
 
-    private static final Path minecraftDir = ((File) FMLInjectionData.data()[6]).toPath();
+    private static final Path minecraftDir = ((File) getFMLInjectionData()[6]).toPath();
     private static final Path cacheDir = minecraftDir.resolve("jar-mods-cache").resolve("v1");
 
     private static MessageDigest getSha256Digest() {
@@ -239,12 +239,22 @@ public class JarInJarModLoader {
         return value;
     }
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
+    @SuppressWarnings({"rawtypes"})
     private static void checkVersion() {
         Class clazz = (Class) Launch.blackboard.get(loaderBlackboardKey);
-        if (clazz == null || ObfuscationReflectionHelper
-                .<Long, Object>getPrivateValue(clazz, null, "revision") < revision)
+        if (clazz == null || getStaticField(clazz, "revision", long.class) < revision)
             Launch.blackboard.put(loaderBlackboardKey, JarInJarModLoader.class);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> T getStaticField(Class<?> clazz, String fieldName, @SuppressWarnings("unused") Class<T> expects) {
+        try {
+            Field f = clazz.getDeclaredField(fieldName);
+            f.setAccessible(true);
+            return (T) f.get(null);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static boolean isLatest() {

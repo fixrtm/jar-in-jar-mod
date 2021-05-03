@@ -12,6 +12,8 @@ import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
+import static com.anatawa12.jarInJar.VersionedPart.dottedFMLName;
+import static com.anatawa12.jarInJar.VersionedPart.slashedFMLName;
 import static org.objectweb.asm.Opcodes.ALOAD;
 import static org.objectweb.asm.Opcodes.GETFIELD;
 import static org.objectweb.asm.Opcodes.INVOKESTATIC;
@@ -21,12 +23,12 @@ public class JarInJarPatcher implements IClassTransformer {
     @Override
     public byte[] transform(String name, String transformedName, byte[] basicClass) {
         assert JarInJarModLoader.isLatest();
-        if ("net.minecraftforge.fml.common.Loader".equals(name))
+        if (dottedFMLName("common.Loader").equals(name))
             return patchLoader(basicClass);
         return basicClass;
     }
 
-    private static final String iModDiscoverer = "net/minecraftforge/fml/common/discovery/ModDiscoverer";
+    private static final String iModDiscoverer = slashedFMLName("common/discovery/ModDiscoverer");
 
     /*
     insert
@@ -45,8 +47,8 @@ public class JarInJarPatcher implements IClassTransformer {
 
         MethodNode identifyMods = node.methods.stream()
                 .filter(it -> it.name.equals("identifyMods") && (
-                        it.desc.equals("(Ljava/util/List;)Lnet/minecraftforge/fml/common/discovery/ModDiscoverer;") 
-                                ||  it.desc.equals("()Lnet/minecraftforge/fml/common/discovery/ModDiscoverer;")))
+                        it.desc.equals("(Ljava/util/List;)L" + iModDiscoverer + ";") 
+                                ||  it.desc.equals("()L" + iModDiscoverer + ";")))
                 .findFirst()
                 .orElseThrow(() -> new IllegalStateException("identifyMods not found"));
 
@@ -71,7 +73,7 @@ public class JarInJarPatcher implements IClassTransformer {
 
         insns.insertBefore(loadThis, new VarInsnNode(ALOAD, discoverer));
         insns.insertBefore(loadThis, new MethodInsnNode(INVOKESTATIC, Type.getInternalName(JarInJarModLoader.class), 
-                "identifyMods", "(L" + iModDiscoverer + ";)V", false));
+                "identifyMods", "(Ljava/lang/Object;)V", false));
 
         ClassWriter writer = new ClassWriter(0);
         node.accept(writer);
