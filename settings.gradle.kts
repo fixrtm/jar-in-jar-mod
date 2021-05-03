@@ -1,6 +1,6 @@
 rootProject.name = "jar-in-jar-mod"
 include("gradle-plugin")
-include("runtime")
+include("runtime-fml-in-forge")
 
 pluginManagement {
     repositories {
