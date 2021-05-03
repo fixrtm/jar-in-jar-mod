@@ -21,7 +21,6 @@ dependencies {
     compileOnly("net.minecraftforge:forge:1.12.2-14.23.5.2855:universal")
     compileOnly("net.minecraft:launchwrapper:1.12")
     compileOnly("org.apache.logging.log4j:log4j-api:2.8.1")
-    compileOnly("com.google.guava:guava:21.0")
     compileOnly("org.ow2.asm:asm:6.0")
     compileOnly(files(rootProject.tasks.createCompileTimeConstant.get().output)
         .builtBy(rootProject.tasks.createCompileTimeConstant))
