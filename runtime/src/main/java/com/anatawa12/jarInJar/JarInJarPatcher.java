@@ -44,8 +44,9 @@ public class JarInJarPatcher implements IClassTransformer {
         new ClassReader(basicClass).accept(node, 0);
 
         MethodNode identifyMods = node.methods.stream()
-                .filter(it -> it.name.equals("identifyMods") && it.desc.equals("(Ljava/util/List;)" +
-                        "Lnet/minecraftforge/fml/common/discovery/ModDiscoverer;"))
+                .filter(it -> it.name.equals("identifyMods") && (
+                        it.desc.equals("(Ljava/util/List;)Lnet/minecraftforge/fml/common/discovery/ModDiscoverer;") 
+                                ||  it.desc.equals("()Lnet/minecraftforge/fml/common/discovery/ModDiscoverer;")))
                 .findFirst()
                 .orElseThrow(() -> new IllegalStateException("identifyMods not found"));
 

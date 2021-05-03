@@ -129,21 +129,26 @@ public class JarInJarModLoader {
                             "@Mods should be in a separate jar from the coremod.",
                     jarName);
         }
-        Method loadCoreMod = ObfuscationReflectionHelper.findMethod(CoreModManager.class,
-                "loadCoreMod", void.class, LaunchClassLoader.class, String.class, File.class);
         try {
+            Method loadCoreMod = CoreModManager.class.getDeclaredMethod("loadCoreMod",
+                    LaunchClassLoader.class, String.class, File.class);
+            loadCoreMod.setAccessible(true);
             for (String className : fmlCorePlugin.split(";")) {
                 if (className.isEmpty()) continue;
                 loadCoreMod.invoke(null, classLoader, className, extracted.toFile());
             }
-        } catch (IllegalAccessException e) {
+        } catch (IllegalAccessException|NoSuchMethodException e) {
             throw new RuntimeException(e);
         } catch (InvocationTargetException e) {
-            Throwable t = e.getTargetException();
-            if (t instanceof RuntimeException) throw (RuntimeException) t;
-            if (t instanceof Error) throw (Error) t;
-            throw new RuntimeException(t);
+            throw handleInvocationTargetException(e);
         }
+    }
+
+    private static RuntimeException handleInvocationTargetException(InvocationTargetException e) {
+        Throwable t = e.getTargetException();
+        if (t instanceof RuntimeException) throw (RuntimeException) t;
+        if (t instanceof Error) throw (Error) t;
+        throw new RuntimeException(t);
     }
 
     private static String sha256(String parent) {
@@ -186,11 +191,19 @@ public class JarInJarModLoader {
             //noinspection ResultOfMethodCallIgnored
             cacheDir.resolve(path).toFile().delete();
 
-        MessageDigest sha256Digest = getSha256Digest();
-        for (String aModInfo : modsMap) {
-            File jarFileFile = cacheDir.resolve(aModInfo).toFile();
+        try {
+            Method addCandidate = ModDiscoverer.class.getDeclaredMethod("addCandidate", ModCandidate.class);
+            addCandidate.setAccessible(true);
+            MessageDigest sha256Digest = getSha256Digest();
+            for (String aModInfo : modsMap) {
+                File jarFileFile = cacheDir.resolve(aModInfo).toFile();
 
-            discoverer.addCandidate(new ModCandidate(jarFileFile, jarFileFile, ContainerType.JAR));
+                addCandidate.invoke(discoverer, new ModCandidate(jarFileFile, jarFileFile, ContainerType.JAR));
+            }
+        } catch (NoSuchMethodException|IllegalAccessException e) {
+            throw new RuntimeException(e);
+        } catch (InvocationTargetException e) {
+            throw handleInvocationTargetException(e);
         }
     }
 
