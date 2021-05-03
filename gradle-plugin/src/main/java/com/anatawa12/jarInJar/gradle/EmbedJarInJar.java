@@ -112,7 +112,8 @@ public class EmbedJarInJar extends DefaultTask {
         Set<File> files = config.getFiles();
         if (files.isEmpty())
             throw new IllegalStateException("no jar-in-jar runtime was configured for " + config + "\n" +
-                    "Please add `com.anatawa12.jarInJar:runtime`");
+                    "Please add `com.anatawa12.jarInJar:runtime-fml-in-cpw` for 1.7.10 or earlier or \n" +
+                    "`com.anatawa12.jarInJar:runtime-fml-in-forge` for 1.8 or older.");
         if (files.size() != 1)
             throw new IllegalStateException("multiple jar-in-jar runtime was configured for " + config);
         return files.iterator().next();
