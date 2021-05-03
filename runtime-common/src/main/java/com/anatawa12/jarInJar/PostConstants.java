@@ -2,7 +2,7 @@ package com.anatawa12.jarInJar;
 
 import java.io.File;
 
-public class VersionedPart {
+public class PostConstants {
     public static Class<?> CoreModManagerClass;
     public static Class<?> ModDiscovererClass;
     public static Class<?> ModCandidateClass;

@@ -6,14 +6,13 @@ import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.FieldInsnNode;
 import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
-import static com.anatawa12.jarInJar.VersionedPart.dottedFMLName;
-import static com.anatawa12.jarInJar.VersionedPart.slashedFMLName;
+import static com.anatawa12.jarInJar.PostConstants.dottedFMLName;
+import static com.anatawa12.jarInJar.PostConstants.slashedFMLName;
 import static org.objectweb.asm.Opcodes.ALOAD;
 import static org.objectweb.asm.Opcodes.GETFIELD;
 import static org.objectweb.asm.Opcodes.INVOKESTATIC;

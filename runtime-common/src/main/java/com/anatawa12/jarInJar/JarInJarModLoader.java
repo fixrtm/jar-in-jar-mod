@@ -1,7 +1,7 @@
 package com.anatawa12.jarInJar;
 
 import LZMA.LzmaInputStream;
-import com.anatawa12.jarInJar.VersionedPart.ModCandidate;
+import com.anatawa12.jarInJar.PostConstants.ModCandidate;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraft.launchwrapper.LaunchClassLoader;
 import org.apache.logging.log4j.LogManager;
@@ -39,10 +39,10 @@ import static com.anatawa12.jarInJar.CompileConstants.major;
 import static com.anatawa12.jarInJar.CompileConstants.minor;
 import static com.anatawa12.jarInJar.CompileConstants.minute;
 import static com.anatawa12.jarInJar.CompileConstants.patch;
-import static com.anatawa12.jarInJar.VersionedPart.CoreModManagerClass;
-import static com.anatawa12.jarInJar.VersionedPart.ModCandidateClass;
-import static com.anatawa12.jarInJar.VersionedPart.ModDiscovererClass;
-import static com.anatawa12.jarInJar.VersionedPart.getFMLInjectionData;
+import static com.anatawa12.jarInJar.PostConstants.CoreModManagerClass;
+import static com.anatawa12.jarInJar.PostConstants.ModCandidateClass;
+import static com.anatawa12.jarInJar.PostConstants.ModDiscovererClass;
+import static com.anatawa12.jarInJar.PostConstants.getFMLInjectionData;
 
 public class JarInJarModLoader {
     @SuppressWarnings({"PointlessArithmeticExpression"})
