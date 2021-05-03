@@ -43,6 +43,7 @@ import static com.anatawa12.jarInJar.PostConstants.CoreModManagerClass;
 import static com.anatawa12.jarInJar.PostConstants.ModCandidateClass;
 import static com.anatawa12.jarInJar.PostConstants.ModDiscovererClass;
 import static com.anatawa12.jarInJar.PostConstants.getFMLInjectionData;
+import static com.anatawa12.jarInJar.PostConstants.getModSha256;
 
 public class JarInJarModLoader {
     @SuppressWarnings({"PointlessArithmeticExpression"})
@@ -268,8 +269,7 @@ public class JarInJarModLoader {
 
             try (ZipFile jarFile = new ZipFile(modJar.toFile())) {
                 ZipEntry jarEntry = jarFile.getEntry("core.jar.lzma");
-                ZipEntry sha256Entry = jarFile.getEntry("core.sha256");
-                byte[] sha256 = readSha256File(jarFile, sha256Entry);
+                byte[] sha256 = getModSha256();
 
                 // if cache mismatch, write
                 if (!Files.exists(extractedFile) || !checkCache(extractedFile, jarEntry, sha256, sha256Digest)) {
@@ -297,26 +297,6 @@ public class JarInJarModLoader {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    private static byte[] readSha256File(ZipFile jarFile, ZipEntry sha256Entry) throws IOException {
-        byte[] chars = new byte[64];
-        try (InputStream stream = jarFile.getInputStream(sha256Entry)) {
-            if (stream.read(chars) != 64)
-                throw new IOException(jarFile.getName() + " is a invalid jar-in-jar mod: invalid size of sha256");
-        }
-        byte[] data = new byte[chars.length / 2];
-        for (int i = 0; i < data.length; i++) {
-            data[i] = (byte) (hex2bin(chars[i * 2]) << 4 | hex2bin(chars[i * 2 + 1]));
-        }
-        return data;
-    }
-
-    private static byte hex2bin(byte aChar) {
-        if ('0' <= aChar && aChar <= '9') return (byte) (aChar - '0');
-        if ('a' <= aChar && aChar <= 'f') return (byte) (aChar - 'a' + 10);
-        if ('A' <= aChar && aChar <= 'F') return (byte) (aChar - 'A' + 10);
-        throw new IllegalArgumentException("invalid hex: " + (char) (aChar & 0xFF));
     }
 
     @SuppressWarnings("RedundantIfStatement")

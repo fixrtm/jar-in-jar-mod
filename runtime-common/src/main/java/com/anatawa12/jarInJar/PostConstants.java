@@ -13,6 +13,10 @@ public class PostConstants {
         }
     }
 
+    public static byte[] getModSha256() {
+        throw new IllegalStateException();
+    }
+
     public static Object[] getFMLInjectionData() {
         throw new IllegalStateException();
     }
