@@ -11,12 +11,15 @@ import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.commons.ClassRemapper;
 import org.objectweb.asm.commons.Remapper;
+import org.tukaani.xz.LZMA2Options;
+import org.tukaani.xz.LZMAOutputStream;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Enumeration;
@@ -147,8 +150,11 @@ public class EmbedJarInJar extends DefaultTask {
             copyAccessTransformerConfigs(atList, sourceJar, out);
 
             // write main content
-            out.putNextEntry(new ZipEntry("core.jar"));
-            copyStream(new FileInputStream(sourceJarFile), out);
+            out.putNextEntry(new ZipEntry("core.jar.lzma"));
+            LZMAOutputStream lzmaOut = new LZMAOutputStream(out,
+                    new LZMA2Options(), -1L);
+            copyStream(new FileInputStream(sourceJarFile), lzmaOut);
+            lzmaOut.finish();
 
             out.putNextEntry(new ZipEntry("core.sha256"));
             createHash(new FileInputStream(sourceJarFile), out);
@@ -159,7 +165,7 @@ public class EmbedJarInJar extends DefaultTask {
         }
     }
 
-    private void createHash(FileInputStream inputStream, ZipOutputStream out) throws IOException {
+    private void createHash(FileInputStream inputStream, OutputStream out) throws IOException {
         MessageDigest digest;
         try {
             digest = MessageDigest.getInstance("SHA-256");

@@ -25,6 +25,7 @@ dependencies {
     compileOnly("net.minecraft:launchwrapper:1.12")
     compileOnly("org.apache.logging.log4j:log4j-api:2.8.1")
     compileOnly("org.ow2.asm:asm-debug-all:5.0.3")
+    compileOnly("lzma:lzma:0.0.1")
     compileOnly(files(rootProject.tasks.createCompileTimeConstant.get().output)
         .builtBy(rootProject.tasks.createCompileTimeConstant))
 

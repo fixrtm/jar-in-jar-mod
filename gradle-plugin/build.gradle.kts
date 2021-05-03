@@ -14,6 +14,7 @@ repositories {
 
 dependencies {
     shadow(gradleApi())
+    implementation("org.tukaani:xz:1.9")
     implementation("org.ow2.asm:asm:9.0")
     implementation("org.ow2.asm:asm-commons:9.0")
 }
@@ -26,6 +27,7 @@ tasks.jar {
 tasks.shadowJar {
     archiveClassifier.set("")
     relocate("org.objectweb.asm", "com.anatawa12.jarInJar.gradle.asm")
+    relocate("org.tukaani.xz", "com.anatawa12.jarInJar.gradle.xz")
 }
 
 tasks.test {

@@ -1,5 +1,6 @@
 package com.anatawa12.jarInJar;
 
+import LZMA.LzmaInputStream;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraft.launchwrapper.LaunchClassLoader;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
@@ -256,7 +257,7 @@ public class JarInJarModLoader {
             Path extractedFile = cacheDir.resolve(key);
 
             try (ZipFile jarFile = new ZipFile(modJar.toFile())) {
-                ZipEntry jarEntry = jarFile.getEntry("core.jar");
+                ZipEntry jarEntry = jarFile.getEntry("core.jar.lzma");
                 ZipEntry sha256Entry = jarFile.getEntry("core.sha256");
                 byte[] sha256 = readSha256File(jarFile, sha256Entry);
 
@@ -266,7 +267,7 @@ public class JarInJarModLoader {
                     Files.createDirectories(extractedFile.getParent());
                     // if not: write to cache and verify hash
                     try (
-                            InputStream jarReading = jarFile.getInputStream(jarEntry);
+                            InputStream jarReading = new LzmaInputStream(jarFile.getInputStream(jarEntry));
                             OutputStream jarWriting = Files.newOutputStream(extractedFile);
                     ) {
                         byte[] buf = new byte[1024];
