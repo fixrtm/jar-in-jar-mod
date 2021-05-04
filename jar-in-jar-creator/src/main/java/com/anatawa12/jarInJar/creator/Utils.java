@@ -70,4 +70,13 @@ public final class Utils {
         hashChars[hashChars.length - 1] = '\n';
         return hashChars;
     }
+
+    public static String toHex(byte[] bytes) {
+        char[] hashChars = new char[bytes.length * 2 + 1];
+        for (int i = 0; i < bytes.length; i++) {
+            hashChars[i * 2] = "0123456789abcdef".charAt((bytes[i] >> 4) & 0xF);
+            hashChars[i * 2 + 1] = "0123456789abcdef".charAt(bytes[i] & 0xF);
+        }
+        return new String(hashChars);
+    }
 }

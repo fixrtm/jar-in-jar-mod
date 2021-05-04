@@ -18,10 +18,6 @@ public class CuiMain {
         readInputFileOption(options, embedJarInJar);
         readOutputFileOption(options, embedJarInJar);
         embedJarInJar.basePackage = options.basePackage;
-        if (embedJarInJar.basePackage == null) {
-            Logger.INSTANCE.error("--base-package not specified");
-            errored = true;
-        }
         embedJarInJar.target = options.target;
         if (embedJarInJar.target == null) {
             Logger.INSTANCE.error("--target not specified");

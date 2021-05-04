@@ -55,7 +55,14 @@ public final class EmbedJarInJar {
     }
 
     private void createJarInJar(File sourceJarFile) throws IOException {
-        listener.begin("Writing zip");
+        listener.begin("Computing SHA256");
+        byte[] sha256JarHash = createHash(new FileInputStream(sourceJarFile));
+
+        if (basePackage == null) {
+            basePackage = "com.anatawa12.jarInJar." + Utils.toHex(sha256JarHash);
+        }
+
+        listener.then("Writing zip");
         JarFile sourceJar = new JarFile(sourceJarFile);
         Manifest newJarManifest = createManifest(sourceJar);
 
@@ -78,9 +85,6 @@ public final class EmbedJarInJar {
                     new LZMA2Options(), -1L);
             copyStream(new FileInputStream(sourceJarFile), lzmaOut, true);
             lzmaOut.finish();
-
-            listener.then("Computing SHA256");
-            byte[] sha256JarHash = createHash(new FileInputStream(sourceJarFile));
 
             listener.then("Transforming and Copying Runtime Library");
             // copy runtime contents
