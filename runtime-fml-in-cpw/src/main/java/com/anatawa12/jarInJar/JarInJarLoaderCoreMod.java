@@ -32,7 +32,12 @@ public class JarInJarLoaderCoreMod implements IFMLLoadingPlugin {
     public void injectData(Map<String, Object> data) {
     }
 
-    @Override
+    //may @Override
+    public String[] getLibraryRequestClass() {
+        return new String[0];
+    }
+
+    //may @Override
     public String getAccessTransformerClass() {
         return null;
     }

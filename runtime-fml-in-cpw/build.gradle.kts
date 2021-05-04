@@ -21,6 +21,7 @@ repositories {
 }
 
 dependencies {
+    //compileOnly("net.minecraftforge:forge:1.6.2-9.10.1.871:universal")
     compileOnly("net.minecraftforge:forge:1.7.10-10.13.4.1614-1.7.10:universal")
     compileOnly("net.minecraft:launchwrapper:1.12")
     compileOnly("org.apache.logging.log4j:log4j-api:2.8.1")
