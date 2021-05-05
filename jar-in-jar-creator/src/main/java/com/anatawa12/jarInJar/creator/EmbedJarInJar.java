@@ -17,6 +17,7 @@ import java.util.jar.Attributes;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
+import java.util.zip.CRC32;
 import java.util.zip.Deflater;
 import java.util.zip.ZipInputStream;
 
@@ -42,16 +43,49 @@ public final class EmbedJarInJar {
     private File uncompressJar() throws IOException {
         listener.begin("Uncompress Jar");
         File temp = File.createTempFile("jar-in-jar-creator-uncompressed", ".jar");
+        File uncompressCacheFile = null;
+        CRC32 crc32 = null;
         Logger.INSTANCE.trace("uncompressed temp file: " + temp);
         try (ZipInputStream zis = new ZipInputStream(input);
              ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(temp))) {
             java.util.zip.ZipEntry entry;
             while ((entry = zis.getNextEntry()) != null) {
-                ZipEntry newEntry = new ZipEntry(entry);
-                newEntry.setMethod(ZipEntry.STORED);
-                newEntry.setCompressedSize(newEntry.getSize());
-                zos.putNextEntry(newEntry);
-                copyStream(zis, zos, false);
+                ZipEntry newEntry = new ZipEntry(entry.getName());
+                InputStream source;
+                if (entry.getSize() == -1 || entry.getCrc() == -1) {
+                    Logger.INSTANCE.trace("found size/crc-unknown entry: " + entry);
+
+                    uncompressCacheFile = uncompressCacheFile != null ? uncompressCacheFile 
+                            : File.createTempFile("jar-in-jar-creator-file", ".tmp");
+                    crc32 = crc32 != null ? crc32 : new CRC32();
+                    crc32.reset();
+
+                    try (FileOutputStream fileOut = new FileOutputStream(uncompressCacheFile)) {
+                        copyStream(zis, fileOut, false);
+                    }
+
+                    try (FileInputStream fileIn = new FileInputStream(uncompressCacheFile)) {
+                        copyStream(fileIn, crc32::update, false);
+                    }
+
+                    newEntry.setSize(uncompressCacheFile.length());
+                    newEntry.setCrc(crc32.getValue());
+                    source = new FileInputStream(uncompressCacheFile);
+                } else {
+                    source = zis;
+                    newEntry.setSize(entry.getSize());
+                    newEntry.setCrc(entry.getCrc());
+                }
+                Utils.copyOpt(newEntry::setCreationTime, entry.getCreationTime());
+                try {
+                    newEntry.setMethod(ZipEntry.STORED);
+                    newEntry.setCompressedSize(newEntry.getSize());
+                    zos.putNextEntry(newEntry);
+                    copyStream(source, zos, false);
+                } finally {
+                    if (source instanceof FileInputStream)
+                        source.close();
+                }
             }
         }
         listener.end();

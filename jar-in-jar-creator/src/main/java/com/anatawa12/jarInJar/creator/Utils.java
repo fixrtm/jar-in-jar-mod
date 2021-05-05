@@ -4,9 +4,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.attribute.FileTime;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.concurrent.Callable;
+import java.util.function.Consumer;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
@@ -15,6 +17,18 @@ public final class Utils {
     }
 
     public static void copyStream(InputStream inputStream, OutputStream out, boolean closeInput) throws IOException {
+        copyStream(inputStream, out::write, closeInput);
+    }
+
+    public static <T> void copyOpt(Consumer<T> setter, T value) {
+        if (value != null) setter.accept(value);
+    }
+
+    interface Write {
+        void write(byte[] b, int off, int len) throws IOException;
+    }
+
+    public static void copyStream(InputStream inputStream, Write out, boolean closeInput) throws IOException {
         try {
             byte[] buf = new byte[4096];
             int read;
