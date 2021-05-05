@@ -7,6 +7,7 @@ import org.objectweb.asm.tree.ClassNode;
 public final class ClassPatcher {
     private static final Patcher[] patchers = new Patcher[]{
             PostConstantsPatcher.INSTANCE,
+            ModCandidatePatcher.INSTANCE,
             RemappingPatcher.INSTANCE,
             ResolveSimpleConstantsPatcher.INSTANCE,
             ResolveStringJoinConstantPatcher.INSTANCE,
