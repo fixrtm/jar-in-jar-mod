@@ -55,7 +55,7 @@ public final class Utils {
     public static String makeSlashed(String dotted) {
         String slashed = dotted.replace('.', '/');
         if (slashed.contains("//")) throw new IllegalStateException("package name has .. part");
-        if (!slashed.endsWith("/")) slashed = slashed + '/';
+        if (slashed.endsWith("/")) slashed = slashed.substring(0, slashed.length() - 1);
         return slashed;
     }
 
