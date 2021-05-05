@@ -9,14 +9,14 @@ plugins {
     id("com.gradle.plugin-publish") version "0.14.0" apply false
 }
 
+group = "com.anatawa12.jarInJar"
+version = "1.0.1-SNAPSHOT"
+
 val major = 1
 val minor = 0
-val patch = 1
-val snapshot = true
-val epoc = LocalDate.of(2021, 5, 5)!!
-
-group = "com.anatawa12.jarInJar"
-version = "$major.$minor.$patch" + if (snapshot) "-SNAPSHOT" else ""
+val patch = 0
+val snapshot = false
+val epoc = LocalDate.of(2021, 4, 29)!!
 
 val dhm = if (!snapshot) Triple(99999, 99, 99) else {
     val date = LocalDate.now(ZoneOffset.UTC)
