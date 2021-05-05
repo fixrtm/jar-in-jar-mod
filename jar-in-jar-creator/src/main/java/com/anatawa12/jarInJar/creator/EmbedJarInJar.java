@@ -1,5 +1,7 @@
 package com.anatawa12.jarInJar.creator;
 
+import com.anatawa12.jarInJar.creator.antZip.ZipEntry;
+import com.anatawa12.jarInJar.creator.antZip.ZipOutputStream;
 import com.anatawa12.jarInJar.creator.classPatch.ClassPatchParam;
 import com.anatawa12.jarInJar.creator.classPatch.ClassPatcher;
 import org.tukaani.xz.LZMA2Options;
@@ -16,9 +18,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 import java.util.zip.Deflater;
-import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-import java.util.zip.ZipOutputStream;
 
 import static com.anatawa12.jarInJar.creator.Constants.slashedLibraryBasePackage;
 import static com.anatawa12.jarInJar.creator.Constants.slashedPostConstantsName;
@@ -42,11 +42,15 @@ public final class EmbedJarInJar {
     private File uncompressJar() throws IOException {
         listener.begin("Uncompress Jar");
         File temp = File.createTempFile("jar-in-jar-creator-uncompressed", ".jar");
+        Logger.INSTANCE.trace("uncompressed temp file: " + temp);
         try (ZipInputStream zis = new ZipInputStream(input);
              ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(temp))) {
-            ZipEntry entry;
+            java.util.zip.ZipEntry entry;
             while ((entry = zis.getNextEntry()) != null) {
-                zos.putNextEntry(new ZipEntry(entry.getName()));
+                ZipEntry newEntry = new ZipEntry(entry);
+                newEntry.setMethod(ZipEntry.STORED);
+                newEntry.setCompressedSize(newEntry.getSize());
+                zos.putNextEntry(newEntry);
                 copyStream(zis, zos, false);
             }
         }
@@ -147,7 +151,7 @@ public final class EmbedJarInJar {
 
     private void copyJarWithPackageRenaming(ZipOutputStream out, ZipInputStream runtimeCommon, ClassPatchParam param) throws IOException {
 
-        ZipEntry entry;
+        java.util.zip.ZipEntry entry;
         while ((entry = runtimeCommon.getNextEntry()) != null) {
             if (!entry.getName().startsWith(slashedLibraryBasePackage))
                 continue;
