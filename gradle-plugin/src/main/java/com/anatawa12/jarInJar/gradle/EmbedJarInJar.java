@@ -155,7 +155,7 @@ public class EmbedJarInJar extends DefaultTask {
     }
 
     @InputFiles
-    private Configuration getConfiguration() {
+    public Configuration getConfiguration() {
         return getProject().getConfigurations().getByName(getCreatorConfiguration());
     }
 
