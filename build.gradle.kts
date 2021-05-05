@@ -52,7 +52,7 @@ subprojects {
     apply(plugin = "maven-publish")
 
     publishing.repositories.maven {
-        name = "sonatype oss rh"
+        name = "sonatype-oss-rh"
         url = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
 
         credentials {
