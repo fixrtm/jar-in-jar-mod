@@ -19,6 +19,11 @@ dependencies {
     implementation("org.ow2.asm:asm-commons:9.0")
 }
 
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
 application {
     mainClass.set("com.anatawa12.jarInJar.creator.commandline.Main")
 }
@@ -67,5 +72,7 @@ tasks.test {
 
 publishing.publications.create("maven", MavenPublication::class) { 
     shadow.component(this)
+    artifact(project.tasks.named("javadocJar"))
+    artifact(project.tasks.named("sourcesJar"))
     configure("Creator", "jar-in-jar mod creating tool.")
 }
