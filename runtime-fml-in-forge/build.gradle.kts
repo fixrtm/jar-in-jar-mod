@@ -38,4 +38,6 @@ tasks.test {
 
 publishing.publications.create("maven", MavenPublication::class) {
     from(components["java"])
+    configure("runtime for fml in forge package",
+        "The runtime library for 1.8 ~ 1.12.2")
 }

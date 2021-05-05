@@ -35,4 +35,6 @@ tasks.test {
 
 publishing.publications.create("maven", MavenPublication::class) {
     from(components["java"])
+    configure("runtime for launch wrapper based versions",
+        "The runtime library for 1.6.2 ~ 1.12.2")
 }

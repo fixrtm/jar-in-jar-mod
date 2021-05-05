@@ -62,16 +62,5 @@ tasks.test {
 
 publishing.publications.create("maven", MavenPublication::class) { 
     shadow.component(this)
-}
-
-tasks.withType<AbstractPublishToMaven>().configureEach {
-    onlyIf {
-        publication.name != "pluginMaven"
-    }
-}
-
-tasks.withType<PublishToMavenRepository>().configureEach {
-    onlyIf {
-        publication.name != "jarInJarPluginMarkerMaven"
-    }
+    configure("Creator", "jar-in-jar mod creating tool.")
 }

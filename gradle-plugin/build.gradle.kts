@@ -33,6 +33,8 @@ gradlePlugin.plugins.create("jarInJar") {
 
 publishing.publications.create("maven", MavenPublication::class) {
     from(components["java"])
+    configure("Gradle Plugin", 
+        "The Gradle Plugin to create jar-in-jar mod with Creator")
 }
 
 tasks.withType<AbstractPublishToMaven>().configureEach {
