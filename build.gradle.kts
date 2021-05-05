@@ -12,7 +12,7 @@ plugins {
 val major = 1
 val minor = 0
 val patch = 0
-val snapshot = true
+val snapshot = false
 val epoc = LocalDate.of(2021, 4, 29)!!
 
 group = "com.anatawa12.jarInJar"
