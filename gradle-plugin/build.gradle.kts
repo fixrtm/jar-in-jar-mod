@@ -33,6 +33,8 @@ tasks.createCompileTimeConstant {
 }
 
 gradlePlugin.plugins.create("jarInJar") {
+    displayName = "Jar In Jar Mod"
+    description = "A plugin to create a mod jar smaller."
     implementationClass = "com.anatawa12.jarInJar.gradle.JarInJarGradlePlugin"
     id = "com.anatawa12.jarInJar"
 }
