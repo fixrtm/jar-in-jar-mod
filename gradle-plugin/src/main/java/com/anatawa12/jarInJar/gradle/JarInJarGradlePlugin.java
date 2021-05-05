@@ -16,22 +16,14 @@ public class JarInJarGradlePlugin implements Plugin<Project> {
     @SuppressWarnings("deprecation")
     @Override
     public void apply(Project target) {
-        target.getConfigurations().create(RUNTIME_LIBRARY_CONFIGURATION);
-        JarInJarExtension extension = target.getExtensions().create("jarInJar", JarInJarExtension.class);
+        target.getConfigurations().create(CREATOR_CONFIGURATION);
+        target.getDependencies().add(CREATOR_CONFIGURATION, "com.anatawa12.jarInJar:jar-in-jar-creator");
 
         Jar jarTask = ((Jar) target.getTasks().getByName("jar"));
 
-        Zip createStoredJar = target.getTasks().create("createStoredJar", Zip.class);
-        createStoredJar.setEntryCompression(ZipEntryCompression.STORED);
-        createStoredJar.dependsOn(extension.dependencyTasksGetter);
-        createStoredJar.setDestinationDir(new File(target.getBuildDir(), "jarInJar"));
-        createStoredJar.setArchiveName("stored-core.jar");
-        createStoredJar.from(callable(() -> target.zipTree(jarTask.getArchivePath())));
-
         EmbedJarInJar embedJarInJar = target.getTasks().create("embedJarInJar", EmbedJarInJar.class);
-        embedJarInJar.setSourceJar(callable(createStoredJar::getArchivePath));
+        embedJarInJar.setSourceJar(callable(jarTask::getArchivePath));
         embedJarInJar.setDestinationJar(callable(jarTask::getArchivePath));
-        embedJarInJar.dependsOn(createStoredJar);
 
         target.getConfigurations().all(config -> config.withDependencies(dependency ->
                 dependency.stream().filter(it -> it instanceof ExternalDependency).map(ExternalDependency.class::cast)
@@ -40,5 +32,5 @@ public class JarInJarGradlePlugin implements Plugin<Project> {
                         .forEach(it -> it.version(constraint -> constraint.require(CompileConstants.version)))));
     }
 
-    public static final String RUNTIME_LIBRARY_CONFIGURATION = "jarInJarRuntimeLibrary";
+    public static final String CREATOR_CONFIGURATION = "jarInJarCreator";
 }

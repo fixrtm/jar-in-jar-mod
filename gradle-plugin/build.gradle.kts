@@ -2,7 +2,6 @@ plugins {
     id("com.anatawa12.compile-time-constant")
     `maven-publish`
     `java-gradle-plugin`
-    id("com.github.johnrengelman.shadow")
 }
 
 group = rootProject.group
@@ -13,21 +12,7 @@ repositories {
 }
 
 dependencies {
-    shadow(gradleApi())
-    implementation("org.tukaani:xz:1.9")
-    implementation("org.ow2.asm:asm:9.0")
-    implementation("org.ow2.asm:asm-commons:9.0")
-}
-
-tasks.jar {
-    isEnabled = false
-    dependsOn(tasks.shadowJar)
-}
-
-tasks.shadowJar {
-    archiveClassifier.set("")
-    relocate("org.objectweb.asm", "com.anatawa12.jarInJar.gradle.asm")
-    relocate("org.tukaani.xz", "com.anatawa12.jarInJar.gradle.xz")
+    implementation(gradleApi())
 }
 
 tasks.test {
@@ -46,8 +31,8 @@ gradlePlugin.plugins.create("jarInJar") {
     id = "com.anatawa12.jarInJar"
 }
 
-publishing.publications.create("maven", MavenPublication::class) { 
-    shadow.component(this)
+publishing.publications.create("maven", MavenPublication::class) {
+    from(components["java"])
 }
 
 tasks.withType<AbstractPublishToMaven>().configureEach {
