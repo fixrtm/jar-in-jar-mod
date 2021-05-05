@@ -82,9 +82,6 @@ public final class PostConstantsPatcher extends Patcher {
                         case "ModDiscovererClass":
                             patchGettingClass(fieldInsnNode, list, "common/discovery/ModDiscoverer", param);
                             break;
-                        case "ModCandidateClass":
-                            patchGettingClass(fieldInsnNode, list, "common/discovery/ModCandidate", param);
-                            break;
                         default:
                             throw new IllegalStateException("unknown VersionedPart method " + fieldInsnNode.name);
                     }

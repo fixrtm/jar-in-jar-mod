@@ -3,7 +3,6 @@ package com.anatawa12.jarInJar;
 public class PostConstants {
     public static Class<?> CoreModManagerClass;
     public static Class<?> ModDiscovererClass;
-    public static Class<?> ModCandidateClass;
 
     public static byte[] getModSha256() {
         throw new IllegalStateException();

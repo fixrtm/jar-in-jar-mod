@@ -23,6 +23,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
@@ -37,7 +38,6 @@ import static com.anatawa12.jarInJar.CompileConstants.minor;
 import static com.anatawa12.jarInJar.CompileConstants.minute;
 import static com.anatawa12.jarInJar.CompileConstants.patch;
 import static com.anatawa12.jarInJar.PostConstants.CoreModManagerClass;
-import static com.anatawa12.jarInJar.PostConstants.ModCandidateClass;
 import static com.anatawa12.jarInJar.PostConstants.ModDiscovererClass;
 import static com.anatawa12.jarInJar.PostConstants.getFMLInjectionData;
 import static com.anatawa12.jarInJar.PostConstants.getModSha256;
@@ -191,18 +191,18 @@ public class JarInJarModLoader {
             cacheDir.resolve(path).toFile().delete();
 
         try {
-            Method addCandidate = ModDiscovererClass.getDeclaredMethod("addCandidate", ModCandidateClass);
-            addCandidate.setAccessible(true);
+            Field candidates = ModDiscovererClass.getDeclaredField("candidates");
+            candidates.setAccessible(true);
+            @SuppressWarnings("unchecked")
+            List<Object> objects = (List<Object>) candidates.get(discoverer);
             MessageDigest sha256Digest = getSha256Digest();
             for (String aModInfo : modsMap) {
                 File jarFileFile = cacheDir.resolve(aModInfo).toFile();
 
-                addCandidate.invoke(discoverer, new ModCandidate(jarFileFile, jarFileFile, "JAR"));
+                objects.add(new ModCandidate(jarFileFile, jarFileFile, "JAR"));
             }
-        } catch (NoSuchMethodException|IllegalAccessException e) {
+        } catch (NoSuchFieldException|IllegalAccessException e) {
             throw new RuntimeException(e);
-        } catch (InvocationTargetException e) {
-            throw handleInvocationTargetException(e);
         }
     }
 
