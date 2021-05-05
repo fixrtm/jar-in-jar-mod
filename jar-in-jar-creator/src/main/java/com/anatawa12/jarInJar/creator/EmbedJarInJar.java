@@ -22,6 +22,7 @@ import java.util.zip.Deflater;
 import java.util.zip.ZipInputStream;
 
 import static com.anatawa12.jarInJar.creator.Constants.slashedLibraryBasePackage;
+import static com.anatawa12.jarInJar.creator.Constants.slashedModCandidateName;
 import static com.anatawa12.jarInJar.creator.Constants.slashedPostConstantsName;
 import static com.anatawa12.jarInJar.creator.Utils.copyStream;
 import static com.anatawa12.jarInJar.creator.Utils.createHash;
@@ -200,6 +201,8 @@ public final class EmbedJarInJar {
             if (!entry.getName().startsWith(slashedLibraryBasePackage))
                 continue;
             if (entry.getName().startsWith(slashedPostConstantsName))
+                continue;
+            if (entry.getName().startsWith(slashedModCandidateName))
                 continue;
             if (entry.isDirectory())
                 continue;
