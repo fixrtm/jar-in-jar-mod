@@ -46,13 +46,13 @@ tasks.processResources {
         include("LICENSE.txt")
     }
     from(project(":runtime-common").tasks.getByName("jar")) {
-        rename { "runtime-common.jar" }
+        rename { "runtime-common.jar.bin" }
     }
     from(project(":runtime-fml-in-cpw").tasks.getByName("jar")) {
-        rename { "runtime-fml-in-cpw.jar" }
+        rename { "runtime-fml-in-cpw.jar.bin" }
     }
     from(project(":runtime-fml-in-forge").tasks.getByName("jar")) {
-        rename { "runtime-fml-in-forge.jar" }
+        rename { "runtime-fml-in-forge.jar.bin" }
     }
 }
 
