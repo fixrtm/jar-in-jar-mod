@@ -37,6 +37,12 @@ gradlePlugin.plugins.create("jarInJar") {
     id = "com.anatawa12.jarInJar"
 }
 
+pluginBundle {
+    website = "https://github.com/anatawa12/jar-in-jar-mod"
+    vcsUrl = "https://github.com/anatawa12/jar-in-jar-mod.git"
+    tags = listOf("minecraft")
+}
+
 publishing.publications.create("maven", MavenPublication::class) {
     from(components["java"])
     configure("Gradle Plugin", 
