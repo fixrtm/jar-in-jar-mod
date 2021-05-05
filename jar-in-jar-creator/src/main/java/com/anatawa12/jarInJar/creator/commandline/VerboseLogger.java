@@ -14,16 +14,16 @@ public class VerboseLogger extends Logger {
 
     @Override
     public void error(String message) {
-        writeTo.println("e:" + message);
+        writeTo.println("[ERROR]:" + message);
     }
 
     @Override
     public void warn(String message) {
-        writeTo.println("w:" + message);
+        writeTo.println("[WARNING]:" + message);
     }
 
     @Override
     public void trace(String message) {
-        writeTo.println("t:" + message);
+        writeTo.println("[TRACE]:" + message);
     }
 }
