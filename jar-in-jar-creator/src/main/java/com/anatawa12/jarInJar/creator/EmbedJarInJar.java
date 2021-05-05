@@ -147,7 +147,8 @@ public final class EmbedJarInJar {
     private Manifest createManifest(JarFile sourceJar) throws IOException {
         Manifest manifest = new Manifest();
         Attributes attributes = manifest.getMainAttributes();
-        Attributes sourceAttr = sourceJar.getManifest().getMainAttributes();
+        Manifest sourceManifest = sourceJar.getManifest();
+        Attributes sourceAttr = sourceManifest == null ? new Attributes() : sourceManifest.getMainAttributes();
 
         attributes.putValue("Manifest-Version", "1.0");
         attributes.put(FMLCorePlugin, basePackage + ".JarInJarLoaderCoreMod");
