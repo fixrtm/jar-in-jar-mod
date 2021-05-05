@@ -104,11 +104,16 @@ public class MainFrame extends JFrame {
 
     public void createJar(ActionEvent e) {
         EmbedJarInJar embedJarInJar = new EmbedJarInJar();
+        if (inputFile == null) {
+            JOptionPane.showMessageDialog(this, "no input file specified.",
+                    "ERROR", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         try {
             embedJarInJar.input = new FileInputStream(inputFile);
         } catch (FileNotFoundException fileNotFoundException) {
             fileNotFoundException.printStackTrace();
-            JOptionPane.showMessageDialog(this, "no input file specified OR file not found.",
+            JOptionPane.showMessageDialog(this, "no input file not found.",
                     "ERROR", JOptionPane.ERROR_MESSAGE);
         }
         embedJarInJar.target = ((TargetPresetElement) Objects.requireNonNull(targetPreset.getSelectedItem())).preset;
