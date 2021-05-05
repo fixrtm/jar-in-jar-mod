@@ -75,12 +75,11 @@ public final class Utils {
         } finally {
             inputStream.close();
         }
-        byte[] hash = digest.digest();
-        return hash;
+        return digest.digest();
     }
 
     public static String toHex(byte[] bytes) {
-        char[] hashChars = new char[bytes.length * 2 + 1];
+        char[] hashChars = new char[bytes.length * 2];
         for (int i = 0; i < bytes.length; i++) {
             hashChars[i * 2] = "0123456789abcdef".charAt((bytes[i] >> 4) & 0xF);
             hashChars[i * 2 + 1] = "0123456789abcdef".charAt(bytes[i] & 0xF);
