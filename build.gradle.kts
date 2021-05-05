@@ -11,9 +11,9 @@ plugins {
 
 val major = 1
 val minor = 0
-val patch = 0
-val snapshot = false
-val epoc = LocalDate.of(2021, 4, 29)!!
+val patch = 1
+val snapshot = true
+val epoc = LocalDate.of(2021, 5, 5)!!
 
 group = "com.anatawa12.jarInJar"
 version = "$major.$minor.$patch" + if (snapshot) "-SNAPSHOT" else ""
