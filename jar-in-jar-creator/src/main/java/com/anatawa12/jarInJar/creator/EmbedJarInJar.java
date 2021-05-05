@@ -201,6 +201,8 @@ public final class EmbedJarInJar {
                 continue;
             if (entry.getName().startsWith(slashedPostConstantsName))
                 continue;
+            if (entry.isDirectory())
+                continue;
 
             listener.begin("Copying " + entry.getName());
             String newName = param.slashedBasePackage + entry.getName().substring(slashedLibraryBasePackage.length());
