@@ -6,7 +6,7 @@ public final class Constants {
 
     public static final String slashedLibraryBasePackage = "com/anatawa12/jarInJar";
     public static final String slashedPostConstantsName = "com/anatawa12/jarInJar/PostConstants";
-    public static final String slashedVersionedModCandidateName = "com/anatawa12/jarInJar/VersionedPart$ModCandidate";
+    public static final String slashedModCandidateName = "com/anatawa12/jarInJar/ModCandidate";
 
     public static final String iObject = "java/lang/Object";
     public static final String iString = "java/lang/String";

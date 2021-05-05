@@ -6,7 +6,7 @@ import org.objectweb.asm.commons.Remapper;
 import org.objectweb.asm.tree.ClassNode;
 
 import static com.anatawa12.jarInJar.creator.Constants.slashedLibraryBasePackage;
-import static com.anatawa12.jarInJar.creator.Constants.slashedVersionedModCandidateName;
+import static com.anatawa12.jarInJar.creator.Constants.slashedModCandidateName;
 import static com.anatawa12.jarInJar.creator.Constants.slashedPostConstantsName;
 
 public final class RemappingPatcher extends Patcher {
@@ -35,7 +35,7 @@ public final class RemappingPatcher extends Patcher {
         public String map(String internalName) {
             if (!internalName.startsWith(slashedLibraryBasePackage))
                 return internalName;
-            if (internalName.equals(slashedVersionedModCandidateName))
+            if (internalName.equals(slashedModCandidateName))
                 return target.slashedFMLName("common/discovery/ModCandidate");
             if (internalName.startsWith(slashedPostConstantsName))
                 throw new IllegalStateException("VersionedPart cannot be used at runtime");

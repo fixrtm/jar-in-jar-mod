@@ -1,7 +1,6 @@
 package com.anatawa12.jarInJar;
 
 import LZMA.LzmaInputStream;
-import com.anatawa12.jarInJar.PostConstants.ModCandidate;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraft.launchwrapper.LaunchClassLoader;
 import org.apache.logging.log4j.LogManager;
