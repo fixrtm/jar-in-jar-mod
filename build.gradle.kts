@@ -5,6 +5,7 @@ plugins {
     `maven-publish`
     id("com.anatawa12.compile-time-constant") version "1.0.3"
     id("com.github.johnrengelman.shadow") version "7.0.0" apply false
+    id("com.gradle.plugin-publish") version "0.14.0" apply false
 }
 
 val major = 1

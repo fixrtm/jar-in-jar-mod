@@ -1,5 +1,6 @@
 plugins {
     id("com.anatawa12.compile-time-constant")
+    id("com.gradle.plugin-publish")
     `maven-publish`
     `java-gradle-plugin`
 }
