@@ -20,7 +20,7 @@ repositories {
 dependencies {
     compileOnly("net.minecraft:launchwrapper:1.12")
     compileOnly("org.apache.logging.log4j:log4j-api:2.0")
-    compileOnly("org.ow2.asm:asm:6.0")
+    compileOnly("org.ow2.asm:asm:9.1")
     compileOnly("lzma:lzma:0.0.1")
     compileOnly(files(rootProject.tasks.createCompileTimeConstant.get().output)
         .builtBy(rootProject.tasks.createCompileTimeConstant))
