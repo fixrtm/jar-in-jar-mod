@@ -62,7 +62,6 @@ public class JarInJarModLoader {
         checkVersion();
         LOGGER.info("loading JarInJar by " + JarInJarModLoader.class.getName());
 
-        ((LaunchClassLoader) JarInJarModLoader.class.getClassLoader()).addClassLoaderExclusion("com.sun.");
         Path jar;
         try {
             URI uri = JarInJarModLoader.class.getProtectionDomain().getCodeSource().getLocation().toURI();
