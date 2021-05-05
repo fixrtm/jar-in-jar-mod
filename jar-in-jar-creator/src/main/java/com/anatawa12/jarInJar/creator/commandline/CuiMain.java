@@ -2,6 +2,7 @@ package com.anatawa12.jarInJar.creator.commandline;
 
 import com.anatawa12.jarInJar.creator.EmbedJarInJar;
 import com.anatawa12.jarInJar.creator.Logger;
+import com.anatawa12.jarInJar.creator.Utils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -13,6 +14,26 @@ public class CuiMain {
     boolean errored;
 
     public void start(Options options) {
+        File realOut = null;
+        // if input and output are same file
+        if (!options.inputFile.equals("-")
+                && new File(options.inputFile).getAbsoluteFile().equals(new File(options.outputFile).getAbsoluteFile())) {
+            try {
+                File outTemp = File.createTempFile("jar-in-jar-creator", ".tmp");
+                outTemp.deleteOnExit();
+                realOut = new File(options.outputFile).getAbsoluteFile();
+                options.outputFile = outTemp.getAbsolutePath();
+                if (!realOut.getParentFile().exists() && !realOut.getParentFile().mkdirs()) {
+                    Logger.INSTANCE.error("Parent directory cannot be Created: " + realOut);
+                    errored = true;
+                }
+            } catch (IOException e) {
+                Logger.INSTANCE.error("Unexpected io error preparing output temporary buffer");
+                Logger.INSTANCE.trace(e.toString());
+                errored = true;
+            }
+        }
+
         EmbedJarInJar embedJarInJar = new EmbedJarInJar();
 
         readInputFileOption(options, embedJarInJar);
@@ -32,6 +53,16 @@ public class CuiMain {
         } catch (IOException e) {
             Logger.INSTANCE.error(e.getMessage());
             if (errored) System.exit(3);
+        }
+
+        if (realOut != null) {
+            try (FileInputStream tempIn = new FileInputStream(options.outputFile);
+                 FileOutputStream fileOut = new FileOutputStream(realOut)) {
+                Utils.copyStream(tempIn, fileOut, false);
+            } catch (IOException e) {
+                Logger.INSTANCE.error(e.getMessage());
+                if (errored) System.exit(3);
+            }
         }
     }
 
