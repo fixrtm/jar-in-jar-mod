@@ -120,6 +120,7 @@ public class MainFrame extends JFrame {
         File temp;
         try {
             temp = File.createTempFile("jar-in-jar-dest-test", ".jar");
+            temp.deleteOnExit();
             embedJarInJar.destination = new FileOutputStream(temp);
             embedJarInJar.listener = new LoggingListener();
             embedJarInJar.runTask();
@@ -156,6 +157,7 @@ public class MainFrame extends JFrame {
             Logger.INSTANCE.trace("canceled to write");
             return;
         }
+        temp.delete();
         Logger.INSTANCE.trace("finished writing to " + fileChooser.getSelectedFile());
     }
 

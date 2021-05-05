@@ -44,6 +44,7 @@ public final class EmbedJarInJar {
     private File uncompressJar() throws IOException {
         listener.begin("Uncompress Jar");
         File temp = File.createTempFile("jar-in-jar-creator-uncompressed", ".jar");
+        temp.deleteOnExit();
         File uncompressCacheFile = null;
         CRC32 crc32 = null;
         Logger.INSTANCE.trace("uncompressed temp file: " + temp);
@@ -63,6 +64,7 @@ public final class EmbedJarInJar {
 
                     uncompressCacheFile = uncompressCacheFile != null ? uncompressCacheFile 
                             : File.createTempFile("jar-in-jar-creator-file", ".tmp");
+                    uncompressCacheFile.deleteOnExit();
                     crc32 = crc32 != null ? crc32 : new CRC32();
                     crc32.reset();
 
@@ -95,6 +97,7 @@ public final class EmbedJarInJar {
             }
         }
         listener.end();
+        if (uncompressCacheFile != null) uncompressCacheFile.delete();
         return temp;
     }
 
@@ -182,10 +185,10 @@ public final class EmbedJarInJar {
 
     private void copyRuntimeContents(ZipOutputStream out, byte[] sha256JarHash) throws IOException {
         ClassPatchParam param = new ClassPatchParam(makeSlashed(basePackage), target, sha256JarHash);
-        try (ZipInputStream runtimeCommon = new ZipInputStream(getInputStream("/runtime-common.jar"))) {
+        try (ZipInputStream runtimeCommon = new ZipInputStream(getInputStream("/runtime-common.jar.bin"))) {
             copyJarWithPackageRenaming(out, runtimeCommon, param);
         }
-        try (ZipInputStream runtimeCommon = new ZipInputStream(getInputStream("/runtime-" + target.jarName + ".jar"))) {
+        try (ZipInputStream runtimeCommon = new ZipInputStream(getInputStream("/runtime-" + target.jarName + ".jar.bin"))) {
             copyJarWithPackageRenaming(out, runtimeCommon, param);
         }
     }
