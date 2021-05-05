@@ -17,6 +17,7 @@ public class CuiMain {
 
         readInputFileOption(options, embedJarInJar);
         readOutputFileOption(options, embedJarInJar);
+        embedJarInJar.keepFmlJsonCache = options.keepFmlJsonCache;
         embedJarInJar.basePackage = options.basePackage;
         embedJarInJar.target = options.target;
         if (embedJarInJar.target == null) {

@@ -32,6 +32,7 @@ public final class EmbedJarInJar {
     public InputStream input;
     public OutputStream destination;
 
+    public boolean keepFmlJsonCache;
     public String basePackage;
     public TargetPreset target;
     public EmbedProgressListener listener;
@@ -50,6 +51,11 @@ public final class EmbedJarInJar {
              ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(temp))) {
             java.util.zip.ZipEntry entry;
             while ((entry = zis.getNextEntry()) != null) {
+                if (!keepFmlJsonCache && (entry.getName().equals("META-INF/fml_cache_annotation.json")
+                        || entry.getName().equals("META-INF/fml_cache_class_versions.json"))){
+                    Logger.INSTANCE.trace("skipping fml json cache " + entry);
+                    continue;
+                }
                 ZipEntry newEntry = new ZipEntry(entry.getName());
                 InputStream source;
                 if (entry.getSize() == -1 || entry.getCrc() == -1) {

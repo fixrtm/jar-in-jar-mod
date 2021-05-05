@@ -17,6 +17,7 @@ import java.util.regex.Pattern;
 Options
     -g --gui: open gui force (defaults if no parameters were passed and not a headless environment)
     -c --cui: do not open gui (defaults if some parameters were passed or a headless environment)
+    -k --keep-fml-json-cache: keeps fml json caches. They're very big in general so removed by default.
     -t --target [fml-in-forge|fml-in-cpw|<version name>]: the target format or version name
     -b --base-package <package name>: the base package name
     -i --input <path to file>: sets path to input file. '-' for standard input.
@@ -31,6 +32,7 @@ public class Options {
 
     // parsed values
     LaunchMode mode = null;
+    boolean keepFmlJsonCache = false;
     TargetPreset target = null;
     String basePackage = null;
     String inputFile = null;
@@ -92,6 +94,9 @@ public class Options {
             case "--cui":
                 setMode(LaunchMode.CUI);
                 break;
+            case "--keep-fml-json-cache":
+                keepFmlJsonCache = true;
+                break;
             case "--target":
                 target = parseTarget(nextParam("--target"));
                 break;
@@ -128,6 +133,9 @@ public class Options {
                     break;
                 case 'c':
                     setMode(LaunchMode.CUI);
+                    break;
+                case 'k':
+                    keepFmlJsonCache = true;
                     break;
                 case 't':
                     target = parseTarget(nextParam('t', arg, i));
