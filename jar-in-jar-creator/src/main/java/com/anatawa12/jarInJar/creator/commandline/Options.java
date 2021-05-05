@@ -221,6 +221,9 @@ public class Options {
                     throw new ParserException("invalid package name: " + arg);
             }
         }
+        String part = arg.substring(last);
+        if (!isJavaIdentifier(part)) hasNonCompatible = true;
+        parts.add(part);
         if (hasNonCompatible)
             warning("package name contains non-java-compatible identifier: " + arg);
         return String.join(".", parts);
