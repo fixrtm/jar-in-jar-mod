@@ -19,7 +19,9 @@ plugins {
 }
 
 tasks.embedJarInJar {
+    // choose one from two below by your mod's target forge version 
     target = TargetPreset.FMLInForge
+    target = TargetPreset.FMLInCpw
     basePackage = "your.mod.package.name.jarInJar"
 }
 tasks.assemble {
