@@ -7,7 +7,27 @@ A trial to make a mod smaller
 
 ## How this work?
 
-This creates a jar contains a non-compressed jar file and loader of the non-compressed jar mod.
+This creates a jar contains a lzma compressed non-compressing jar file and loader of the non-compressed jar mod.
+
+## How to Use 
+
+```groovy
+import com.anatawa12.jarInJar.gradle.TargetPreset
+
+plugins {
+    id("com.anatawa12.jarInJar") version "version name here"
+}
+
+tasks.embedJarInJar {
+    target = TargetPreset.FMLInForge
+    basePackage = "your.mod.package.name.jarInJar"
+}
+tasks.assemble {
+    dependsOn tasks.embedJarInJar
+    // or for kotlin
+    // dependsOn(tasks.embedJarInJar.get())
+}
+```
 
 ## How much does this work?
 
