@@ -6,9 +6,9 @@ plugins {
     id("com.github.johnrengelman.shadow") version "7.0.0" apply false
 }
 
-val major = 0
+val major = 1
 val minor = 0
-val patch = 1
+val patch = 0
 val snapshot = true
 val epoc = LocalDate.of(2021, 4, 29)!!
 
