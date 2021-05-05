@@ -15,6 +15,11 @@ dependencies {
     implementation(gradleApi())
 }
 
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
 tasks.test {
     useJUnitPlatform()
 }
