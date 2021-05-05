@@ -3,8 +3,6 @@ package com.anatawa12.jarInJar;
 import LZMA.LzmaInputStream;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraft.launchwrapper.LaunchClassLoader;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -58,7 +56,7 @@ public class JarInJarModLoader {
             : "" + major + '.' + minor + '.' + patch
             + "-SNAPSHOT-" + day + "-" + hour + "-" + minute;
 
-    private static final Logger LOGGER = LogManager.getLogger("JarInJarModLoader-" + versionName);
+    private static final Logger LOGGER = Logger.getLogger("JarInJarModLoader-" + versionName);
 
     public static void load() {
         checkVersion();
@@ -123,7 +121,7 @@ public class JarInJarModLoader {
             return;
         }
         if (!mfAttributes.containsKey("FMLCorePluginContainsFMLMod")) {
-            LOGGER.trace("Adding {} to the list of known coremods, it will not be examined again", jarName);
+            LOGGER.debug("Adding {} to the list of known coremods, it will not be examined again", jarName);
             getIgnoredSet().add(key);
         } else {
             LOGGER.warn("Found FMLCorePluginContainsFMLMod marker in {}. This is not recommended by FML, " +
