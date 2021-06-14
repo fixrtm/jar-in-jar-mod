@@ -10,7 +10,7 @@ plugins {
 }
 
 group = "com.anatawa12.jarInJar"
-version = "1.0.1-SNAPSHOT"
+version = property("version")!!
 
 val major = 1
 val minor = 0
