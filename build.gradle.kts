@@ -6,7 +6,7 @@ plugins {
     signing
     id("com.anatawa12.compile-time-constant") version "1.0.5"
     id("com.github.johnrengelman.shadow") version "7.0.0" apply false
-    id("com.gradle.plugin-publish") version "0.14.0" apply false
+    id("com.gradle.plugin-publish") version "0.15.0" apply false
 }
 
 group = "com.anatawa12.jarInJar"
