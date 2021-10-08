@@ -66,7 +66,7 @@ public class EmbedJarInJar extends DefaultTask {
         if (targetPreset != null) {
             return targetPreset;
         }
-        return GUtil.toEnum(TargetPreset.class, targetName);
+        return TargetPreset.valueOf(targetName);
     }
 
     public void setTarget(boolean target) {
