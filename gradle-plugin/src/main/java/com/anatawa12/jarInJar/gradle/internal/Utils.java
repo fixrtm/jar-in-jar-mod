@@ -1,4 +1,4 @@
-package com.anatawa12.jarInJar.gradle;
+package com.anatawa12.jarInJar.gradle.internal;
 
 import java.io.IOException;
 import java.io.InputStream;

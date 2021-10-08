@@ -4,13 +4,10 @@ import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.artifacts.ExternalDependency;
 import org.gradle.api.tasks.bundling.Jar;
-import org.gradle.api.tasks.bundling.Zip;
-import org.gradle.api.tasks.bundling.ZipEntryCompression;
 
-import java.io.File;
 import java.util.Objects;
 
-import static com.anatawa12.jarInJar.gradle.Utils.callable;
+import static com.anatawa12.jarInJar.gradle.internal.Utils.callable;
 
 public class JarInJarGradlePlugin implements Plugin<Project> {
     @SuppressWarnings("deprecation")

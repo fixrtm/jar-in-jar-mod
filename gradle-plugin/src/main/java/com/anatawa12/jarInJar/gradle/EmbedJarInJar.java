@@ -9,11 +9,10 @@ import org.gradle.api.tasks.InputFiles;
 import org.gradle.api.tasks.Optional;
 import org.gradle.api.tasks.OutputFile;
 import org.gradle.api.tasks.TaskAction;
-import org.gradle.util.GUtil;
 
 import java.io.File;
 
-import static com.anatawa12.jarInJar.gradle.Utils.callable;
+import static com.anatawa12.jarInJar.gradle.internal.Utils.callable;
 
 public class EmbedJarInJar extends DefaultTask {
     private Object creatorConfiguration = JarInJarGradlePlugin.CREATOR_CONFIGURATION;
