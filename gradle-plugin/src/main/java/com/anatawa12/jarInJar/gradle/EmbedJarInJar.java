@@ -1,6 +1,7 @@
 package com.anatawa12.jarInJar.gradle;
 
 import com.anatawa12.jarInJar.gradle.internal.DeferredUtil;
+import com.anatawa12.jarInJar.gradle.internal.Utils;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.artifacts.Configuration;
 import org.gradle.api.tasks.Input;
@@ -141,7 +142,7 @@ public class EmbedJarInJar extends DefaultTask {
     public void runTask() {
         getProject().javaexec((spec) -> {
             spec.classpath(getConfiguration());
-            spec.setMain("com.anatawa12.jarInJar.creator.commandline.Main");
+            Utils.setMain(spec, "com.anatawa12.jarInJar.creator.commandline.Main");
             spec.args("--cui");
 
             if (getVerbose())

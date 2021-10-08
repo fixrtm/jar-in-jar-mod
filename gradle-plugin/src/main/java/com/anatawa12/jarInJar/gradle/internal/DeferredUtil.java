@@ -20,7 +20,7 @@ public class DeferredUtil {
             } catch (IllegalAccessException e) {
                 throw new RuntimeException(e);
             } catch (InvocationTargetException e) {
-                throw throwAsUncheckedException(e.getCause(), true);
+                throw Utils.sneakyThrow(e.getCause());
             }
         } else {
             return unpackFallback(deferred);
@@ -110,31 +110,7 @@ public class DeferredUtil {
         try {
             return callable.call();
         } catch (Exception e) {
-            throw throwAsUncheckedException(e, false);
+            throw Utils.throwAsUncheckedException(e);
         }
-    }
-
-    private static RuntimeException throwAsUncheckedException(Throwable t, boolean sneakyThrows) {
-        if (t instanceof InterruptedException) {
-            Thread.currentThread().interrupt();
-        }
-        if (t instanceof RuntimeException) {
-            throw (RuntimeException) t;
-        }
-        if (t instanceof Error) {
-            throw (Error) t;
-        }
-        if (t instanceof IOException) {
-            throw new UncheckedIOException(t.getMessage(), t);
-        }
-        if (sneakyThrows) {
-            throw DeferredUtil.<RuntimeException>sneakyThrow(t);
-        }
-        throw new RuntimeException(t.getMessage(), t);
-    }
-
-    @SuppressWarnings("unchecked")
-    private static <E extends Throwable> RuntimeException sneakyThrow(Throwable t) throws E {
-        throw (E)t;
     }
 }
