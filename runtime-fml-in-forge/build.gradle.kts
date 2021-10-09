@@ -19,11 +19,12 @@ repositories {
 
 dependencies {
     //compileOnly("net.minecraftforge:forge:1.12.2-14.23.5.2855:universal")
-    compileOnly("net.minecraftforge:forge:1.8-11.14.4.1577:universal")
-    compileOnly("net.minecraft:launchwrapper:1.12")
-    compileOnly("org.apache.logging.log4j:log4j-api:2.8.1")
-    compileOnly("org.ow2.asm:asm:6.0")
-    compileOnly("lzma:lzma:0.0.1")
+    val empty = ""
+    compileOnly("net.minecraftforge$empty:forge:1.8-11.14.4.1577:universal")
+    compileOnly("net.minecraft$empty:launchwrapper:1.12")
+    compileOnly("org.apache.logging$empty.log4j:log4j-api:2.8.1")
+    compileOnly("org.ow2.asm$empty:asm:6.0")
+    compileOnly("lzma$empty:lzma:0.0.1")
     compileOnly(files(rootProject.tasks.createCompileTimeConstant.get().output)
         .builtBy(rootProject.tasks.createCompileTimeConstant))
     compileOnly(project(":runtime-common"))
