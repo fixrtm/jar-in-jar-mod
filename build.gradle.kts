@@ -2,8 +2,6 @@ import java.time.*
 
 plugins {
     java
-    `maven-publish`
-    signing
     id("com.anatawa12.compile-time-constant") version "1.0.5"
     id("com.github.johnrengelman.shadow") version "7.0.0" apply false
     id("com.gradle.plugin-publish") version "0.14.0" apply false
@@ -48,27 +46,4 @@ tasks.createCompileTimeConstant {
         "hour" to hour,
         "minute" to minute,
     ))
-}
-
-subprojects {
-    apply(plugin = "maven-publish")
-    apply(plugin = "signing")
-
-    publishing.repositories.maven {
-        name = "sonatype-oss-rh"
-        url = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
-
-        credentials {
-            username = project.findProperty("com.anatawa12.sonatype.username")?.toString() ?: ""
-            password = project.findProperty("com.anatawa12.sonatype.passeord")?.toString() ?: ""
-        }
-    }
-
-    afterEvaluate {
-        signing {
-            publishing.publications.forEach { publication ->
-                sign(publication)
-            }
-        }
-    }
 }
