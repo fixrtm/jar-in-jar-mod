@@ -1,0 +1,82 @@
+name: Publish
+on:
+  - workflow_dispatch
+
+env:
+  RELEASER_CHANGER: gradle-properties
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  version-up:
+    environment: deployment
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          token: "${{ secrets.ACTIONS_PAT }}"
+      - uses: anatawa12/something-releaser@v2
+      - run: set-git-user anatawa12-bot
+
+      - name: Update Version
+        run: |
+          git switch -c releasing
+          # set current version
+          VERSION="$(get-version)"
+          if ! [[ "$VERSION" = *-SNAPSHOT ]]; then
+            echo 'VERSION IS NOT SNAPSHOT' >&2
+            exit 1
+          fi
+          VERSION="$(version-unsnapshot "$VERSION")"
+          set-version "$VERSION"
+          # create changelog
+          generate-changelog -v "$VERSION" --date-for-unreleased
+          # update versions in documentation
+          function replace_version() {
+            perl -pi \
+              -e 's/(?<=\Q("com.anatawa12.jarInJar") version \E)".*"/"'$VERSION'"/' \
+              README.md 
+          }
+          replace_version
+          # commit & tag & push
+          git add .
+          git commit -m "v$VERSION"
+          git tag "v$VERSION"
+
+          git push -u origin releasing
+
+      - name: Prepare Build
+        run: |
+          prepare-gradle-signing "$GPG_PRIVATE_KEY" "$GPG_PRIVATE_PASS"
+          prepare-gradle-maven "https://oss.sonatype.org/service/local/staging/deploy/maven2/" \
+            --user "$SONATYPE_USER" \
+            --pass "$SONATYPE_PASS"
+          prepare-gradle-plugin-portal "$GRADLE_KEY" "$GRADLE_SECRET"
+        env:
+          GPG_PRIVATE_KEY: "${{ secrets.GPG_PRIVATE_KEY }}"
+          GPG_PRIVATE_PASS: "${{ secrets.GPG_PRIVATE_PASS }}"
+          SONATYPE_USER: "${{ secrets.SONATYPE_USER }}"
+          SONATYPE_PASS: "${{ secrets.SONATYPE_PASS }}"
+          GRADLE_KEY: "${{ secrets.GRADLE_KEY }}"
+          GRADLE_SECRET: "${{ secrets.GRADLE_SECRET }}"
+
+      - run: ./gradlew publish publishPlugins
+
+      - name: Update To Next Version
+        run: |
+          VERSION="$(get-version)"
+          VERSION="$(version-next "$VERSION")"
+          set-version "$(version-snapshot "$VERSION")"
+          git add .
+          git commit -m "prepare for next version: $VERSION"
+          git push
+          # clone master
+          git config --add remote.origin.fetch +refs/heads/master:refs/remotes/origin/master
+          git fetch --depth 1 origin master
+          git switch master
+          git reset --hard releasing
+          git push -u origin master
+          git push --delete origin releasing
