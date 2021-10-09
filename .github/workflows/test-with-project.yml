@@ -43,9 +43,9 @@ jobs:
           - simplest-cpw-kt
           - simplest-forge-kt
         exclude:
-          - gradle: "4.0"
+          - gradle: "4.10.3"
             project: simplest-cpw-kt
-          - gradle: "4.0"
+          - gradle: "4.10.3"
             project: simplest-forge-kt
     steps:
       - uses: actions/checkout@v2
