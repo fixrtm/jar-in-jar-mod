@@ -16,7 +16,7 @@ public class JarInJarGradlePlugin implements Plugin<Project> {
         target.apply((p) -> p.plugin("java"));
 
         target.getConfigurations().create(CREATOR_CONFIGURATION);
-        target.getDependencies().add(CREATOR_CONFIGURATION, "com.anatawa12.jarInJar:jar-in-jar-creator");
+        target.getDependencies().add(CREATOR_CONFIGURATION, "com.anatawa12.jarInJar:jar-in-jar-creator:" + CompileConstants.version);
 
         Jar jarTask = ((Jar) target.getTasks().getByName("jar"));
 
