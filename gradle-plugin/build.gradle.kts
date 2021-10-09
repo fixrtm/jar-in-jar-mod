@@ -43,6 +43,9 @@ pluginBundle {
     website = "https://github.com/anatawa12/jar-in-jar-mod"
     vcsUrl = "https://github.com/anatawa12/jar-in-jar-mod.git"
     tags = listOf("minecraft")
+    mavenCoordinates {
+        groupId = project.group.toString()
+    }
 }
 
 publishing.publications.create("maven", MavenPublication::class) {
