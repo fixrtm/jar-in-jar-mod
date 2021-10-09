@@ -59,3 +59,16 @@ jobs:
       - name: Run Build Task
         working-directory: test-projects/${{ matrix.project }}
         run: ./gradlew build
+
+  conclude:
+    runs-on: ubuntu-latest
+    if: ${{ always() }}
+    needs:
+      - build
+      - example
+    steps:
+      - name: Conclude Tests
+        env: { NEEDS: "${{ toJSON(needs) }}" }
+        run: |
+          echo "$NEEDS" | jq -c '. | to_entries[] | [.key, .value.result]'
+          echo "$NEEDS" | jq -e '. | all(.result == "success")' > /dev/null
