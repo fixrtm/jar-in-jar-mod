@@ -40,6 +40,13 @@ jobs:
         project:
           - simplest-cpw
           - simplest-forge
+          - simplest-cpw-kt
+          - simplest-forge-kt
+        exclude:
+          - gradle: "4.0"
+            project: simplest-cpw-kt
+          - gradle: "4.0"
+            project: simplest-forge-kt
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK 1.8
