@@ -1,23 +1,23 @@
 import com.anatawa12.jarInJar.gradle.TargetPreset
 
-buildscript {
-    repositories {
-        mavenLocal()
-        mavenCentral()
-    }
-    dependencies {
-        classpath("com.anatawa12.jarInJar:gradle-plugin:+")
-    }
+plugins {
+    id("com.anatawa12.jarInJar")
 }
 
-apply {
-    plugin("com.anatawa12.jarInJar")
+repositories {
+    mavenLocal()
+    mavenCentral()
 }
 
 tasks.embedJarInJar {
     target = TargetPreset.FMLInForge
     basePackage = "com.anatawa12.jarInJar.example.jarInJar"
 }
+
 tasks.assemble {
     dependsOn(tasks.embedJarInJar.get())
+}
+
+tasks.embedJarInJar {
+    dependsOn(tasks.jar)
 }
