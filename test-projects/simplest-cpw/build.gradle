@@ -1,0 +1,29 @@
+buildscript {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+    dependencies {
+        classpath("com.anatawa12.jarInJar:gradle-plugin:${System.getenv("PLUGIN_VERSION")}")
+    }
+}
+
+apply plugin: "com.anatawa12.jarInJar"
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+tasks.embedJarInJar {
+    target = "FMLInCpw"
+    basePackage = "com.anatawa12.jarInJar.example.jarInJar"
+}
+
+tasks.assemble {
+    dependsOn(tasks.embedJarInJar)
+}
+
+tasks.embedJarInJar {
+    dependsOn(tasks.jar)
+}
