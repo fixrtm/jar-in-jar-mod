@@ -15,7 +15,7 @@ This creates a jar contains a lzma compressed non-compressing jar file and loade
 import com.anatawa12.jarInJar.gradle.TargetPreset
 
 plugins {
-    id("com.anatawa12.jarInJar") version "1.0.2"
+    id("com.anatawa12.jarInJar") version "1.0.3"
 }
 
 tasks.embedJarInJar {
