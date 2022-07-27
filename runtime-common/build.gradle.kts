@@ -26,7 +26,7 @@ dependencies {
     compileOnly(files(rootProject.tasks.createCompileTimeConstant.get().output)
         .builtBy(rootProject.tasks.createCompileTimeConstant))
 
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.0")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
 }
 
