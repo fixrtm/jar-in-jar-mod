@@ -16,7 +16,7 @@ repositories {
 dependencies {
     implementation("org.tukaani:xz:1.9")
     implementation("org.ow2.asm:asm:9.2")
-    implementation("org.ow2.asm:asm-commons:9.2")
+    implementation("org.ow2.asm:asm-commons:9.4")
 }
 
 java {
